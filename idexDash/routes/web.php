@@ -40,16 +40,23 @@ require __DIR__ . '/auth.php';
 
 
 Route::get('/dashboard', [Controller::class, 'dashboard']);
-Route::get('/blogs/add', [Controller::class, 'addBlog'])->name('page.add');
-Route::get('/blogs/edit/{id?}', [Controller::class, 'editBlog'])->name('page.edit');
+Route::get('/blogs/add', [Controller::class, 'addBlog'])->name('pageBlog.add');
+Route::get('/blogs/edit/{id?}', [Controller::class, 'editBlog'])->name('pageBlog.edit');
 Route::get('/blogs/all', [Controller::class, 'allBlog'])->name('page.blog');
 
-/************ARTICLE ROUTE VIEW************** */
+// /************ARTICLE ROUTE VIEW************** */
 
 Route::get('/article/add', [Controller::class, 'addArticle'])->name('page.add');
 Route::get('/article/edit/{id?}', [Controller::class, 'editArticle'])->name('page.edit');
 Route::get('/article/all', [Controller::class, 'allArticle'])->name('page.article');
-/******************************* */
+// /******************************* */
 
 Route::resource('/blog', BlogController::class);
 Route::resource('/article', ArticleController::class);
+
+
+
+
+
+/* ***********NEW Dash***************** */
+Route::get('/www', [Controller::class, 'dash']);

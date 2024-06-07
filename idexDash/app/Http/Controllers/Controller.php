@@ -18,6 +18,11 @@ class Controller extends BaseController
         return view('dashboard/layout/home');
     }
 
+    public function dash()
+    {
+        return view('dash/layout/home');
+    }
+
     public function addBlog()
     {
         return view('page/blog/add');

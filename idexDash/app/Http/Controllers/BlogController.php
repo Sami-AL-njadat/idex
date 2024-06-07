@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\blog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use HTMLPurifier;
+use HTMLPurifier_Config;
+use Flasher\Laravel\Facade\Flasher;
 
 class BlogController extends Controller
 {
@@ -40,24 +43,27 @@ class BlogController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:100',
+            'title' => 'required|string|max:120',
             'description' => 'required|string',
-            'image' => 'image|mimes:jpeg,png,jpg|max:25000',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:25000',
         ]);
+
         if ($validator->fails()) {
-            $errorMessage = implode('<br>', $validator->errors()->all());
-            toastr()->error($errorMessage, 'Validation Error');
+            $errorMessage = implode('<h1>', $validator->errors()->all());
+            Flasher::addError($errorMessage, 'Validation Error');
             return redirect()->back();
         }
 
+        $config = HTMLPurifier_Config::createDefault();
+        $purifier = new HTMLPurifier($config);
 
         $blog = new Blog();
         $blog->title = $request->title;
-        $blog->description = $request->description;
-
+        $blog->description = $purifier->purify($request->description);
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
@@ -67,10 +73,10 @@ class BlogController extends Controller
 
         $blog->save();
 
-
-
         return redirect()->back()->with('success', 'Blog added successfully!');
     }
+
+
 
 
 

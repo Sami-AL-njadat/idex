@@ -1,105 +1,120 @@
- @extends('dashboard.layout.master')
+ @extends('dash.layout.master')
 
  @section('content')
-     {{-- <div class="content-start transition">
-
-         <div class="main-content">
-             <section class="section">
-                 <div class="section-header">
-                     <h1>Blog</h1>
-
-                 </div>
-
-                 <div class="section-body">
-                     <div class="row">
-                         <div class="col-12">
-                             <div class="card">
-                                 <div class="card-header">
-                                     <h4>New Blog</h4>
-                                 </div>
-                                 <div class="card-body p-0">
-
-                                     <div class="card-body p-0">
-                                         <form action="{{ route('blog.store') }}" method="POST"
-                                             enctype="multipart/form-data">
-
-                                             @csrf
-
-                                             <div class="card-body">
-
-                                                 <div class="row">
-
-
-
-
-                                                 </div>
-
-                                                 <div class="row">
-                                                     <div class="form-group col-md-6">
-                                                         <label>Title</label>
-                                                         <input name="title" class="form-control" required>
-
-                                                     </div>
-
-
-
-                                                     <div class="form-group col-md-6">
-                                                         <label>Image</label>
-                                                         <input name="image" type="file" class="form-control">
-
-                                                     </div>
-                                                 </div>
-
-
-
-                                                 <div class="form-group mb-0">
-                                                     <label>Description</label>
-                                                     <textarea name="description" class="form-control" required></textarea>
-
-                                                 </div>
-                                             </div>
-                                             <div class="card-footer text-right">
-                                                 <button type="submit" class="btn btn-primary">Submit</button>
-                                             </div>
-                                         </form>
+     <main id="content" role="main" class="main">
+         <div class="container">
+             <div class="row justify-content-lg-center">
+                 <div class="col-lg-9">
+                     <div class="card card-lg mb-3 mb-lg-5">
+                         <div class="card-header">
+                             <h4 class="card-header-title">Details</h4>
+                         </div>
+                         <form action="{{ route('blog.store') }}" method="POST" enctype="multipart/form-data">
+                             @csrf
+                             <div class="card-body">
+                                 <div class="mb-4">
+                                     <label for="projectNameProjectSettingsLabel" class="form-label">
+                                         Blog name
+                                         <i class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
+                                             data-bs-placement="top" title="Displayed on public forums, such as Front."></i>
+                                     </label>
+                                     <div class="input-group input-group-merge">
+                                         <div class="input-group-prepend input-group-text">
+                                             <i class="bi-briefcase"></i>
+                                         </div>
+                                         <input type="text" class="form-control" name="title"
+                                             id="projectNameProjectSettingsLabel" placeholder="Enter blog name here"
+                                             aria-label="Enter project name here" required>
                                      </div>
                                  </div>
+                                 <div class="mb-4">
+                                     <label class="form-label">
+                                         Blog description
+                                         <i class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip"
+                                             data-bs-placement="top" title="Displayed on public forums, such as Front."></i>
+                                     </label>
+                                     <div class="quill-custom">
+                                         <div class="js-quill" id="desc" style="height: 15rem;"
+                                             data-hs-quill-options='{
+                        "placeholder": "Type your message...",
+                        "modules": {
+                            "toolbar": [
+                                ["bold", "italic", "underline", "strike", "link", "image", "blockquote", "code", {"list": "bullet"}]
+                            ]
+                         }
+                          }'>
+                                         </div>
+                                     </div>
+                                     <textarea name="description" style="display:none;"></textarea>
+                                 </div>
+                                 <div class="card mb-3 mb-lg-5 mt-2">
+                                     <div class="card-header card-header-content-between">
+                                         <h4 class="card-header-title">Media</h4>
+                                     </div>
+                                     <div class="js-dropzone dz-dropzone dz-dropzone-card">
+                                         <div class="dz" style="width: 100%; text-align: center;">
+                                             <!-- Use unique IDs for each image -->
+                                             <img id="showImageDefault" class="avatar avatar-xl avatar-4x3 mb-3"
+                                                 src="{{ asset('dist/assets/svg/illustrations/oc-browse.svg') }}"
+                                                 alt="Image Description" data-hs-theme-appearance="default">
+                                             <img id="showImageLight" class="avatar avatar-xl avatar-4x3 mb-3"
+                                                 src="{{ asset('dist/assets/svg/illustrations-light/oc-browse.svg') }}"
+                                                 alt="Image Description" data-hs-theme-appearance="dark">
+                                             <h5>Drag and drop your file here</h5>
+                                             <input id="image" name="image" type="file"
+                                                 class="btn btn-white btn-sm">
+                                         </div>
+                                     </div>
+                                 </div>
+
+
+
                              </div>
-                         </div>
-                     </div>
-             </section>
-         </div>
-     </div> --}}
-     <div class="row column4 graph mt-4">
+                             <div class="card-footer d-flex justify-content-end align-items-center gap-3">
+                                 <button type="button" class="btn btn-white">Cancel</button>
+                                 <button type="submit" class="btn btn-primary">Save changes</button>
+                             </div>
+                         </form>
 
 
-         <div class="col-md-12">
-             <div class="dash_blog">
-                 <div class="dash_blog_inner">
-                     <div class="dash_head">
-                         <h3><span><i class="fa fa-newspaper-o"></i> Add New Blog</span><span class="plus_green_bt"><a
-                                     href="#">+</a></span></h3>
-                     </div>
-                     <div class="list_cont">
-                         <p>Today Tasks for Ronney Jack</p>
-                     </div>
-                     <div class="task_list_main">
-                         <ul class="task_list">
-                             <li><a href="#">Meeting about plan for Admin Template 2018</a><br><strong>10:00
-                                     AM</strong></li>
-                             <li><a href="#">Create new task for Dashboard</a><br><strong>10:00 AM</strong></li>
-                             <li><a href="#">Meeting about plan for Admin Template 2018</a><br><strong>11:00
-                                     AM</strong></li>
-                             <li><a href="#">Create new task for Dashboard</a><br><strong>10:00 AM</strong></li>
-                             <li><a href="#">Meeting about plan for Admin Template 2018</a><br><strong>02:00
-                                     PM</strong></li>
-                         </ul>
-                     </div>
-                     <div class="read_more">
-                         <div class="center"><a class="main_bt read_bt" href="#">Read More</a></div>
+
+
+
                      </div>
                  </div>
              </div>
          </div>
-     </div>
+     </main>
+     {{-- <script>
+         document.querySelector('form').addEventListener('submit', function() {
+             var quillEditor = document.querySelector('#desc .ql-editor');
+             var quillHtml = quillEditor.innerHTML;
+             document.querySelector('textarea[name="description"]').value = quillHtml;
+         });
+     </script> --}}
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script>
+         $(document).ready(function() {
+             $('#image').change(function(e) {
+                 var reader = new FileReader();
+                 reader.onload = function(e) {
+                     $('#showImageDefault').attr('src', e.target.result);
+                     $('#showImageLight').attr('src', e.target.result);
+                 }
+                 reader.readAsDataURL(e.target.files[0]);
+             });
+
+             // Check if the input file has a value on page load
+             $('#image').each(function() {
+                 if ($(this).val()) {
+                     var reader = new FileReader();
+                     reader.onload = function(e) {
+                         $('#showImageDefault').attr('src', e.target.result);
+                         $('#showImageLight').attr('src', e.target.result);
+                     }
+                     reader.readAsDataURL($(this)[0].files[0]);
+                 }
+             });
+         });
+     </script>
  @endsection
