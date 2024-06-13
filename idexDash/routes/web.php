@@ -17,18 +17,19 @@ use App\Http\Controllers\ArticleController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 });
 
 require __DIR__ . '/auth.php';
@@ -40,21 +41,22 @@ require __DIR__ . '/auth.php';
 
 
 Route::get('/dashboard', [Controller::class, 'dashboard']);
-Route::get('/blogs/add', [Controller::class, 'addBlog'])->name('pageBlog.add');
-Route::get('/blogs/edit/{id?}', [Controller::class, 'editBlog'])->name('pageBlog.edit');
-Route::get('/blogs/all', [Controller::class, 'allBlog'])->name('page.blog');
+Route::get('/idex/blog-create', [Controller::class, 'addBlog'])->name('pageBlog.add') ;
+Route::get('/idex/blog-update/{id?}', [Controller::class, 'editBlog'])->name('pageBlog.edit');
+Route::get('/idex/blog-show', [Controller::class, 'allBlog'])->name('page.blog') ;
 
 // /************ARTICLE ROUTE VIEW************** */
 
-Route::get('/article/add', [Controller::class, 'addArticle'])->name('page.add');
-Route::get('/article/edit/{id?}', [Controller::class, 'editArticle'])->name('page.edit');
-Route::get('/article/all', [Controller::class, 'allArticle'])->name('page.article');
+Route::get('/idex/article-create', [Controller::class, 'addArticle'])->name('pageArticle.add');
+Route::get('/idex/article-Update/{id?}', [Controller::class, 'editArticle'])->name('pageArticle.edit');
+Route::get('/idex/article-show', [Controller::class, 'allArticle'])->name('page.article');
+ 
 // /******************************* */
 
 Route::resource('/blog', BlogController::class);
 Route::resource('/article', ArticleController::class);
 
-
+ 
 
 
 

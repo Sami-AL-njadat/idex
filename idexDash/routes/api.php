@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 /* *******************IDEX****************** */
 
-Route::get('/blogs/all', [BlogController::class, 'index']);
-
-Route::apiResource('article', ArticleController::class);
+// Route::get('/blogs/all', [BlogController::class, 'index']);
+ 
+// Route::apiResource('article', ArticleController::class);
+ 

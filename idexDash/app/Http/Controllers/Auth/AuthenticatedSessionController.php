@@ -9,29 +9,81 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Flasher\Laravel\Facade\Flasher;
+use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 
-class AuthenticatedSessionController extends Controller
+ use Illuminate\Validation\ValidationException;
+ class AuthenticatedSessionController extends Controller
 {
     /**
      * Display the login view.
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('page.authraization.login');
     }
 
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    // public function store(LoginRequest $request): RedirectResponse
+    // {
+    //     $request->authenticate();
+
+    //     $request->session()->regenerate();
+
+    //     return redirect()->intended(RouteServiceProvider::HOME);
+    // }
+
+
+
+    public function store(Request $request)
     {
-        $request->authenticate();
 
-        $request->session()->regenerate();
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ], [
+            'email.required' => 'The email field is required.',
+            'email.email' => 'Please enter a valid email address.',
+            'password.required' => 'The password field is required.',
+        ]);
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+      
+
+
+        if ($validator->fails()) {
+            $errorMessage = implode('<br>', $validator->errors()->all());
+            return redirect()->back()->with('error', $errorMessage);
+        }
+ 
+       
+        
+         $user = User::where('email', $request->input('email'))->first();
+
+        if (!$user) {
+             Flasher::addError('The provided email does not match our records.');
+            throw ValidationException::withMessages([
+                'email' => ['The provided email does not match our records.'],
+            ]);
+        }
+
+        if (!Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')],
+            $request->filled('remember')
+        )) {
+             Flasher::addError('The provided password does not match our records.');
+            throw ValidationException::withMessages([
+                'password' => ['The provided password does not match our records.'],
+            ]);
+        }
+
+         $request->session()->regenerate();
+
+         Flasher::addSuccess('Welcome ' . $user->name );
+
+         return redirect()->intended(RouteServiceProvider::HOME);
     }
-
     /**
      * Destroy an authenticated session.
      */
@@ -43,6 +95,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/login');
     }
 }

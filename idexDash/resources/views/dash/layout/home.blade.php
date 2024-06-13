@@ -1,7 +1,6 @@
  @extends('dash.layout.master')
 
  @section('content')
-     <main id="content" role="main" class="main">
          <!-- Content -->
          <div class="content container-fluid">
              <!-- Page Header -->
@@ -1584,5 +1583,4 @@
          </div>
 
          <!-- End Footer -->
-     </main>
- @endsection
+  @endsection

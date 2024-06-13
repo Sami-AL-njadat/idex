@@ -93,7 +93,13 @@ body {
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent
 }
-
+  .scrollable-cell {
+      max-height: 40px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+  }
 hr {
     margin: 1.75rem 0;
     color: rgba(231, 234, 243, .7);
@@ -34290,3 +34296,7 @@ a:hover .text-inherit {
 .leaflet-popup {
     margin-bottom: 2.5rem
 }
+
+/* sami edit  */
+
+  

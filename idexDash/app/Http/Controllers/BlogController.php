@@ -46,12 +46,11 @@ class BlogController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+          $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:120',
             'description' => 'required|string',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:25000',
         ]);
-
         if ($validator->fails()) {
             $errorMessage = implode('<h1>', $validator->errors()->all());
             Flasher::addError($errorMessage, 'Validation Error');
@@ -112,36 +111,42 @@ class BlogController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Validate the incoming request
         $validator = Validator::make($request->all(), [
             'title' => 'string|nullable',
             'description' => 'string|nullable',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:25000|nullable',
         ]);
 
-        if ($validator->fails()) {
+         if ($validator->fails()) {
             $errorMessage = implode('<br>', $validator->errors()->all());
-            toastr()->error($errorMessage, 'Validation Error');
-            return redirect()->back();
+            return redirect()->back()->with('error', $errorMessage);
         }
 
-        $blog = Blog::find($id);
+         $blog = Blog::find($id);
         if (!$blog) {
             return redirect()->back()->with('error', 'Blog not found');
         }
 
+         $config = HTMLPurifier_Config::createDefault();
+        $purifier = new HTMLPurifier($config);
+
         $changes = false;
 
-        if ($request->filled('title') && $blog->title !== $request->title) {
+         if ($request->filled('title') && $blog->title !== $request->title) {
             $blog->title = $request->title;
             $changes = true;
         }
 
-        if ($request->filled('description') && $blog->description !== $request->description) {
-            $blog->description = $request->description;
-            $changes = true;
+         if ($request->filled('description')) {
+            $cleanedDescription = $purifier->purify($request->description);
+            if ($blog->description !== $cleanedDescription) {
+                $blog->description = $cleanedDescription;
+                $changes = true;
+            }
         }
 
-        if ($request->hasFile('image')) {
+         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('/imageBlog'), $imageName);
@@ -149,7 +154,7 @@ class BlogController extends Controller
             $changes = true;
         }
 
-        if ($changes) {
+         if ($changes) {
             $blog->save();
             return redirect()->back()->with('success', 'Blog updated successfully');
         } else {
@@ -159,18 +164,18 @@ class BlogController extends Controller
 
 
 
+
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($blog)
-    {
+        public function destroy($id)
+        {        
+            $delete = blog::find($id);
+            if (!$delete) {
+                return redirect()->back()->with('error', 'Blog not found');
+            }
+            $delete->delete();
 
-        $delete = blog::find($blog);
-        if (!$delete) {
-            return redirect()->back()->with('error', 'Blog not found');
+            return redirect()->route('page.blog')->with('success', 'Blog deleted successfully');
         }
-        $delete->delete();
-
-        return redirect()->route('page.blog')->with('success', 'Blog deleted successfully');
-    }
 }
